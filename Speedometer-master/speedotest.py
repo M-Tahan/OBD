@@ -1,10 +1,11 @@
 import random
 from turtle import position
+from urllib import response
 import speedometer
 from tkinter import *
+
 import testoop
-x= testoop.Siuu()
-f=0
+import obd
 root=Tk()
 canvas=Canvas(root,height=600,width=600)
 canvas.pack()
@@ -17,13 +18,18 @@ A=speedometer.Speedometer(canvas,"oval",Range=(0,200))
 
 
 def updateS():
-    f = random.randint(1,220)
-    x = random.randint(1,8)
+    connection = obd.OBD()
+    cmd_speed = obd.commands.SPEED
+    response_speed = connection.query(cmd_speed)
+    cmd_rpm = obd.commands.RPM
+    response_rpm = connection.query(cmd_rpm)    
+    f= int(response_speed.value)
+    x= int(response_rpm.value)
     canvas.itemconfig(speed, text = str(f))
     canvas.itemconfig(rpm, text = str(x))
     A.moveto(f, "oval")
     print(f)
-    root.after(10000, updateS)
+    root.after(200, updateS)
 
 #A.moveto(5,"oval")
 A.changerange(Range=(0,220),rfont=("Verdana",10))
