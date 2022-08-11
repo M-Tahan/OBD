@@ -5,7 +5,7 @@ import speedometer
 from tkinter import *
 
 import testoop
-import obd
+import OBD
 root=Tk()
 canvas=Canvas(root,height=600,width=600)
 canvas.pack()
@@ -15,20 +15,16 @@ speed = canvas.create_text(270,350,font=("Courier",20))
 rpmText = canvas.create_text(325,400,text="RPM x1000",font=("Courier",20))
 rpm = canvas.create_text(275,400,font=("Courier",20))
 A=speedometer.Speedometer(canvas,"oval",Range=(0,200))
-
+obdVar = OBD.OBDvar()
 
 def updateS():
-    connection = obd.OBD()
-    cmd_speed = obd.commands.SPEED
-    response_speed = connection.query(cmd_speed)
-    cmd_rpm = obd.commands.RPM
-    response_rpm = connection.query(cmd_rpm)    
-    f= int(response_speed.value)
-    x= int(response_rpm.value)
+        
+    f= obdVar.speedResults()
+    x= obdVar.rpmResults()
     canvas.itemconfig(speed, text = str(f))
     canvas.itemconfig(rpm, text = str(x))
     A.moveto(f, "oval")
-    print(f)
+    
     root.after(200, updateS)
 
 #A.moveto(5,"oval")
